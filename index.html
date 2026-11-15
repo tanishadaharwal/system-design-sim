@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UPTIME — The Solo Architect Sim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Inter:wght@400;500;600&family=Fraunces:wght@500;700;900&family=Source+Sans+3:wght@400;600&family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700&family=Pixelify+Sans:wght@400;700&family=Chakra+Petch:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ TITLE SCREEN ============ -->
+<section id="title" class="screen">
+  <button class="btn small ghost gearBtn title-gear" title="Fonts, music and sound">⚙ Fonts &amp; sound</button>
+  <canvas id="titleSky"></canvas>
+  <div class="title-inner">
+    <div class="logo"><span class="logo-dot"></span>UPTIME</div>
+    <p class="tagline">You are engineer #1. There is no engineer #2.<br>Design the system. Survive the growth. Keep the lights on.</p>
+    <div id="cast" class="cast"></div>
+    <div id="paths" class="paths"></div>
+    <div class="start-row">
+      <label>Name your company
+        <input id="coName" maxlength="14" autocomplete="off" spellcheck="false">
+      </label>
+      <button id="startBtn" class="btn big">Start day one →</button>
+      <button id="continueBtn" class="btn ghost big" hidden>Continue saved game</button>
+    </div>
+    <p class="fine">No code. No whiteboard interviews. Just you, a rubber duck, and production.</p>
+  </div>
+</section>
+
+<!-- ============ GAME SCREEN ============ -->
+<section id="game" class="screen" hidden>
+  <header id="hud">
+    <div class="hud-co">
+      <div class="co-badge" id="coBadge">B</div>
+      <div><div class="co-name" id="coLabel">Company</div><div class="co-sub" id="dayLabel">Day 1</div></div>
+    </div>
+    <div class="vital heart" id="vHealth" title="System health: errors, latency and ongoing incidents">
+      <div class="ring"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" class="ring-bg"/><circle cx="20" cy="20" r="16" class="ring-fg" id="healthRing"/></svg><span id="healthNum">100</span></div>
+      <div class="v-label">Health</div>
+    </div>
+    <div class="vital"><div class="v-num" id="vUsers">0</div><div class="v-label">Active users</div></div>
+    <div class="vital"><div class="v-num" id="vSignups">0</div><div class="v-label">Signups / day</div></div>
+    <div class="vital"><div class="v-num" id="vOrders">0</div><div class="v-label" id="ordersLabel">Orders / day</div></div>
+    <div class="vital"><div class="v-num" id="vLatency">0</div><div class="v-label">Latency p95</div></div>
+    <div class="vital"><div class="v-num" id="vErr">0%</div><div class="v-label">Errors</div></div>
+    <div class="vital"><div class="v-num" id="vRep">★★★★★</div><div class="v-label">Reputation</div></div>
+    <div class="vital money"><div class="v-num" id="vCash">$0</div><div class="v-label" id="vBurn">+$0/day</div></div>
+    <div class="hud-right">
+      <div class="rank" id="rankBox" title="Architect XP"><div id="rankName">Intern</div><div class="xpbar"><i id="xpFill"></i></div></div>
+      <div class="speed">
+        <button data-speed="0" title="Pause">❚❚</button>
+        <button data-speed="1" class="on" title="Normal">▶</button>
+        <button data-speed="2.5" title="Fast">▶▶</button>
+      </div>
+      <button id="codexBtn" class="btn small">📖 Codex <b id="codexCount">0</b></button>
+      <button class="btn small ghost gearBtn" title="Fonts, music and sound">⚙</button>
+    </div>
+  </header>
+
+  <main id="stage">
+    <aside id="left">
+      <div class="panel mission">
+        <div class="chip" id="chapterChip">Chapter 1</div>
+        <h3 id="chapterTitle">The Garage</h3>
+        <p id="objective">Launch and get your first users.</p>
+        <div class="milestone"><i id="milestoneFill"></i></div>
+        <div class="milestone-label" id="milestoneLabel"></div>
+        <canvas id="spark" width="260" height="60"></canvas>
+      </div>
+      <div class="panel feed">
+        <h4>The internet is talking</h4>
+        <div id="feed"></div>
+      </div>
+    </aside>
+
+    <div id="world">
+      <canvas id="map"></canvas>
+      <div id="tooltip" hidden></div>
+      <div id="toasts"></div>
+      <div id="alertBanner" hidden></div>
+    </div>
+
+    <aside id="right">
+      <div class="panel build">
+        <h4>Build <span class="muted">— your move, any time</span></h4>
+        <div id="shop"></div>
+      </div>
+    </aside>
+  </main>
+</section>
+
+<!-- ============ OVERLAYS ============ -->
+<div id="dialog" class="vn" hidden>
+  <div class="vn-portrait" id="vnPortrait"></div>
+  <div class="vn-box">
+    <div class="vn-name" id="vnName"></div>
+    <div class="vn-text" id="vnText"></div>
+    <div class="vn-next">click or press space ▸</div>
+  </div>
+</div>
+
+<div id="modal" class="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+<div id="chapterCard" class="chapter-card" hidden></div>
+<div id="settings" hidden></div>
+
+<script src="js/core.js"></script>
+<script src="js/art.js"></script>
+<script src="js/music.js"></script>
+<script src="js/concepts.js"></script>
+<script src="js/story.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
